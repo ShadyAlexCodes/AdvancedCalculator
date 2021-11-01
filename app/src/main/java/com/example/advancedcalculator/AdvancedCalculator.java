@@ -12,4 +12,8 @@ public class AdvancedCalculator {
 
         this.inputNumber = inputNumber;
     }
+
+    public int add(int x, int y) {
+        return x + y;
+    }
 }
