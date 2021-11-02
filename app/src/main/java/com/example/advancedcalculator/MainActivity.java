@@ -81,28 +81,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the error message text for visual purposes
         txtErrorMsg.setText("A: " + firstNumber + " " + currentOperation + " " + txtOutput.getText().toString());
-
-        System.out.println("MY CURRENT OPERATION: " + currentOperation);
-
     }
 
     public void getUserNumber(View view) {
+        // Grab all the buttons that are assigned to this function
         Button button = (Button) view;
+        // Parse their clicked value and and append it
         numberToAppend(Integer.parseInt(button.getText().toString()));
     }
 
     public void clearButton(View view) {
+        // Clear everything
+
         txtOutput.setText("");
         txtErrorMsg.setText("");
+        firstNumber = Double.NaN;
+        secondNumber = 0;
+        currentOperation = null;
     }
 
     public void getEqualsResult(View view) {
+       // calculate the expression
         calculateExpression();
-   //     txtErrorMsg.setText(firstNumber + " " + currentOperation + " " + secondNumber + " = " + operation(firstNumber, secondNumber, currentOperation));
 
-
-        /*   txtErrorMsg.setText(Double.toString(operation(firstNumber, secondNumber, currentOperation)));*/
-        System.out.println("WHO TF KNOWS: " + firstNumber);
+        // reset all the values
         firstNumber = Double.NaN;
         secondNumber = 0;
         currentOperation = null;
@@ -110,18 +112,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void calculateExpression() {
+        // Check if the double is not-not a number
         if (!Double.isNaN(firstNumber)) {
-            System.out.println("FIRS TNUMBER: " + firstNumber);
+
+            // Assign the second number the value of the text output
             secondNumber = Double.parseDouble(txtOutput.
                     getText().toString());
-            System.out.println("POINT B");
+
+            // Reset the output
             txtOutput.setText(null);
-            System.out.println("SECOND NUMBER: " + secondNumber);
 
-            System.out.println("Print: " + operation(firstNumber, secondNumber, currentOperation));
-            System.out.println(firstNumber + " " + currentOperation + " " + secondNumber + " = " + operation(firstNumber, secondNumber, currentOperation));
-
-            txtOutput.setText(Double.toString(operation(firstNumber, secondNumber, currentOperation)));
+            // Preform the equation
+            txtOutput.setText(Double.toString(advancedCalculator.operation(firstNumber, secondNumber, currentOperation)));
         } else {
             // try parsing the first number
             try {
@@ -139,24 +141,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Double function to preform operations. Takes in two values and the operator
-    private double operation(double firstValue, double secondValue, String operator) {
-        switch (operator) {
-            case "+":
-                return firstValue + secondValue;
-            case "-":
-                return firstValue - secondValue;
-            case "/":
-                return firstValue / secondValue;
-            case "x":
-                return firstValue * secondValue;
-            case "%":
-                return firstValue % secondValue;
-            default:
-                return -1;
-        }
-    }
-
     // Function that'll append the number to the display
     private void numberToAppend(int number) {
         // Make sure the users input isn't greater than 10 arguments
@@ -170,15 +154,6 @@ public class MainActivity extends AppCompatActivity {
             // Display red and inform the user that they cannot enter more than 10 numbers.
             txtErrorMsg.setTextColor(Color.RED);
             txtErrorMsg.setText("You cannot enter more than 10 numbers");
-        }
-    }
-
-    // Simple function that resets the error message text field
-    private void removeErrorOutput() {
-        // Checks if the string is not null
-        if (txtErrorMsg.getText().toString() != null) {
-            // Sets the error message's value to null
-            txtErrorMsg.setText(null);
         }
     }
 }

@@ -4,16 +4,22 @@ import java.lang.reflect.Array;
 
 public class AdvancedCalculator {
 
-    private int inputNumber;
-    private int storageNumber;
-
-
-    public void setInputNumber(int inputNumber) {
-
-        this.inputNumber = inputNumber;
+    // Double function to preform operations. Takes in two values and the operator
+    public double operation(double firstValue, double secondValue, String operator) {
+        switch (operator) {
+            case "+":
+                return firstValue + secondValue;
+            case "-":
+                return firstValue - secondValue;
+            case "/":
+                return firstValue / secondValue;
+            case "x":
+                return firstValue * secondValue;
+            case "%":
+                return firstValue % secondValue;
+            default:
+                return -1;
+        }
     }
 
-    public int add(int x, int y) {
-        return x + y;
-    }
 }
