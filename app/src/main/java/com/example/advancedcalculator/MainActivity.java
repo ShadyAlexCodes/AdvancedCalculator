@@ -1,29 +1,14 @@
 package com.example.advancedcalculator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    AdvancedCalculator advancedCalculator = new AdvancedCalculator();
-    TextView txtOutput;
-    TextView txtErrorMsg;
-    int storage = 0;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        txtOutput = (TextView) findViewById(R.id.txtOutput);
-        txtErrorMsg = (TextView) findViewById(R.id.txtError);
-    }
 
 
     /*
@@ -55,104 +40,145 @@ public class MainActivity extends AppCompatActivity {
     equationOutput (Display the operators output)
 
 
-
      */
 
+    // Define the advancedCalculator class
+    AdvancedCalculator advancedCalculator = new AdvancedCalculator();
+
+    // Create a text view to store the output and error message
+    TextView txtOutput, txtErrorMsg;
+    // Create a string to store the current operation
+    String currentOperation;
+
+    // Store the first number and set it to Not a Number
+    private double firstNumber = Double.NaN;
+    // Store the second number
+    private double secondNumber;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Define the output and error message box.
+        txtOutput = findViewById(R.id.txtOutput);
+        txtErrorMsg = findViewById(R.id.txtError);
+    }
+
+
     public void getUserOperation(View view) {
+        // Define a pusdeo variable that'll act as the placeholder for multiple ID's
+        Button button = (Button) view;
 
-        switch(view.getId()) {
-            case R.id.operationClear:
-                txtOutput.setText("");
-                txtErrorMsg.setText("");
-                System.out.println("CLEAR");
-                break;
-            case R.id.operationModulus:
-                System.out.println("MODULUS");
-                break;
-            case R.id.operationMultiplication:
-                System.out.println("MULTIPLICATION");
-                break;
-            case R.id.operationDivision:
-                System.out.println("DIVISION");
-                break;
-            case R.id.operationSubtraction:
-                System.out.println("SUBTRACTION");
-                break;
-            case R.id.operatorAddition:
+        // Remove any errors
+        //removeErrorOutput();
 
-                storage = Integer.parseInt(txtOutput.getText().toString());
-                txtErrorMsg.setText(Integer.toString(storage) + " + ");
-                txtOutput.setText(null);
-                System.out.println("ADDITION");
-                break;
-            case R.id.operatorEqual:
-                txtOutput.setText(Integer.toString(storage + Integer.parseInt(txtOutput.getText().toString())));
+        // Run the calculation expression
+        calculateExpression();
 
-                System.out.println("EQUAL");
-                break;
-            default:
-                System.out.println("THERE WAS AN ERROR");
-                break;
-        }
+        // Grab the current operation
+        currentOperation = button.getText().toString();
+
+        // Set the error message text for visual purposes
+        txtErrorMsg.setText("A: " + firstNumber + " " + currentOperation + " " + txtOutput.getText().toString());
+
+        System.out.println("MY CURRENT OPERATION: " + currentOperation);
+
     }
 
     public void getUserNumber(View view) {
-        switch(view.getId()) {
-            case R.id.btnZero:
-                numberToAppend(0);
-                System.out.println("ZERO");
-                break;
-            case R.id.btnOne:
-                numberToAppend(1);
-                System.out.println("ONE");
-                break;
-            case R.id.btnTwo:
-                numberToAppend(2);
-                System.out.println("TWO");
-                break;
-            case R.id.btnThree:
-                numberToAppend(3);
-                System.out.println("THREE");
-                break;
-            case R.id.btnFour:
-                numberToAppend(4);
-                System.out.println("FOUR");
-                break;
-            case R.id.btnFive:
-                numberToAppend(5);
-                System.out.println("FIVE");
-                break;
-            case R.id.btnSix:
-                numberToAppend(6);
-                System.out.println("SIX");
-                break;
-            case R.id.btnSeven:
-                numberToAppend(7);
-                System.out.println("SEVEN");
-                break;
-            case R.id.btnEight:
-                numberToAppend(8);
-                System.out.println("EIGT");
-                break;
-            case R.id.btnNine:
-                numberToAppend(9);
-                System.out.println("NINE");
-                break;
-            default:
-                System.out.println("THERE WAS AN ERROR");
-                break;
+        Button button = (Button) view;
+        numberToAppend(Integer.parseInt(button.getText().toString()));
+    }
+
+    public void clearButton(View view) {
+        txtOutput.setText("");
+        txtErrorMsg.setText("");
+    }
+
+    public void getEqualsResult(View view) {
+        calculateExpression();
+   //     txtErrorMsg.setText(firstNumber + " " + currentOperation + " " + secondNumber + " = " + operation(firstNumber, secondNumber, currentOperation));
+
+
+        /*   txtErrorMsg.setText(Double.toString(operation(firstNumber, secondNumber, currentOperation)));*/
+        System.out.println("WHO TF KNOWS: " + firstNumber);
+        firstNumber = Double.NaN;
+        secondNumber = 0;
+        currentOperation = null;
+    }
+
+
+    private void calculateExpression() {
+        if (!Double.isNaN(firstNumber)) {
+            System.out.println("FIRS TNUMBER: " + firstNumber);
+            secondNumber = Double.parseDouble(txtOutput.
+                    getText().toString());
+            System.out.println("POINT B");
+            txtOutput.setText(null);
+            System.out.println("SECOND NUMBER: " + secondNumber);
+
+            System.out.println("Print: " + operation(firstNumber, secondNumber, currentOperation));
+            System.out.println(firstNumber + " " + currentOperation + " " + secondNumber + " = " + operation(firstNumber, secondNumber, currentOperation));
+
+            txtOutput.setText(Double.toString(operation(firstNumber, secondNumber, currentOperation)));
+        } else {
+            // try parsing the first number
+            try {
+                // Set the first number equal to the doubled parse value
+                firstNumber = Double.parseDouble(txtOutput.getText().toString());
+                // Set the output text to null
+                txtOutput.setText(null);
+            } catch (Exception e) {
+
+                // set the text color to red
+                txtErrorMsg.setTextColor(Color.RED);
+                // inform the user they are having number issues.
+                txtErrorMsg.setText("Please enter some numbers to continue.");
+            }
         }
     }
 
+    // Double function to preform operations. Takes in two values and the operator
+    private double operation(double firstValue, double secondValue, String operator) {
+        switch (operator) {
+            case "+":
+                return firstValue + secondValue;
+            case "-":
+                return firstValue - secondValue;
+            case "/":
+                return firstValue / secondValue;
+            case "x":
+                return firstValue * secondValue;
+            case "%":
+                return firstValue % secondValue;
+            default:
+                return -1;
+        }
+    }
+
+    // Function that'll append the number to the display
     private void numberToAppend(int number) {
-        if(txtOutput.getText().toString().length() <= 10) {
+        // Make sure the users input isn't greater than 10 arguments
+        if (txtOutput.getText().toString().length() <= 10) {
+            // Appends the number to the string
             txtOutput.append(Integer.toString(number));
-            txtErrorMsg.setText(Integer.toString(number));
+            // Displays the initial number
+            txtErrorMsg.append(Integer.toString(number));
+            System.out.println("OUTPUT: " + txtOutput.getText().toString());
         } else {
+            // Display red and inform the user that they cannot enter more than 10 numbers.
             txtErrorMsg.setTextColor(Color.RED);
             txtErrorMsg.setText("You cannot enter more than 10 numbers");
         }
     }
 
-
+    // Simple function that resets the error message text field
+    private void removeErrorOutput() {
+        // Checks if the string is not null
+        if (txtErrorMsg.getText().toString() != null) {
+            // Sets the error message's value to null
+            txtErrorMsg.setText(null);
+        }
+    }
 }
